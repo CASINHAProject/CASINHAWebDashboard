@@ -19,7 +19,7 @@ $('#sign').submit(function() {
 
                 success : function(json) {
                     if (json == true) {
-                        parent.window.document.location.href = '';
+                        parent.window.document.location.href = '/';
                     } else {
                         $('.pre1').addClass("semfunc");
                         $('.t1').removeClass("semfunc");
@@ -64,7 +64,7 @@ $('#register').submit(function() {
                 success : function(json) {
                     console.log("Resultado do processamento: "+json);
                     if (json == true) {
-                        parent.window.document.location.href = '';
+                        parent.window.document.location.href = '/';
                     } else {
                         $('.pre2').addClass("semfunc");
                         $('.t2').removeClass("semfunc");
@@ -83,69 +83,6 @@ $('#register').submit(function() {
     });
     return false;
 });
-
-
-function insere() {
-    console.log("apertado");
-    var value = $("#add").val();
-    $('.loadadd').removeClass("semfunc");
-    $.ajax({
-        url : "/add/",
-        type : "POST",
-        data : { 
-            value : value,
-             },
-
-        success : function(json) {
-            console.log("Resultado do processamento: "+json);
-            if (json == true) {
-                parent.window.document.location.href = '';
-            } else {
-                alert("Campo de nota está vazio");
-                $('.loadadd').addClass("semfunc");
-            }            
-        },
-
-        error : function(xhr,errmsg,err) {
-            console.log(xhr.status + ": " + xhr.responseText);
-           alert("Erro ao adicionar nota");
-           $('.loadadd').addClass("semfunc");
-
-        }
-    }); 
-        
-
-    return false;
-    
-}
-
-function remove(pk) {
-    console.log("remove");
-     $.ajax({
-        url : "/remove/",
-        type : "POST",
-        data : { 
-            value : pk,
-             },
-
-        success : function(json) {
-            console.log("Resultado do processamento: "+json);
-            if (json == true) {
-                parent.window.document.location.href = '';
-            } else {
-            }            
-        },
-
-        error : function(xhr,errmsg,err) {
-            console.log(xhr.status + ": " + xhr.responseText);
-
-        }
-    }); 
-        
-
-    return false;
-    
-}
 
 function delete_account(){
     $.ajax({
@@ -167,6 +104,50 @@ function delete_account(){
         }
     }); 
        
+}
+
+function addHouse(){
+    console.log("apertado");
+    var name = $("#name").val();
+    var server = $("#server").val();
+    var user = $("#user").val();
+    var password = $("#password").val();
+    var port = $("#port").val();
+    //$('.loadadd').removeClass("semfunc");
+    $.ajax({
+        url : "/house/add/",
+        type : "POST",
+        data : { 
+            name : name,
+            server : server,
+            user : user,
+            password : password,
+            portws : port
+             },
+
+
+
+        success : function(json) {
+            console.log("Resultado do processamento: "+json);
+            if (json == true) {
+                parent.window.document.location.href = '/';
+            } else {
+                Materialize.toast('Complete todos os campos', 4000);
+                //$('.loadadd').addClass("semfunc");
+            }            
+        },
+
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+           Materialize.toast('Erro: '+xhr.status, 4000);
+           //$('.loadadd').addClass("semfunc");
+
+        }
+    }); 
+        
+
+    return false;
+    
 }
 
 //Cookies globais padrões para utilização do AJAX
@@ -201,3 +182,5 @@ function getCookie(name) {
             }
         }
     });
+
+

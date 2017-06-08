@@ -11,7 +11,7 @@ class House(models.Model):
 	user = models.CharField(max_length=100, verbose_name='Usuário', null=False, blank=False)
 	password = models.CharField(max_length=100, verbose_name='Senha', null=False, blank=False)
 	portws = models.CharField(max_length=100, verbose_name='Porta para websocket', null=False, blank=False)
-	participants = models.ManyToManyField(User, verbose_name='Participantes')
+	participants = models.ManyToManyField(User, verbose_name='Participantes', blank=True)
 
 	def __str__(self):
 		return self.name

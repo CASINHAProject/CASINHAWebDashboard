@@ -1,2 +1,123 @@
-{% extends 'base.html' %}
+{% extends 'base_index.html' %}
+{% load staticfiles %}
+{% block titlepage %}CASINHA - Home{% endblock titlepage %}
 
+{% block menuoptions %}
+<ul class="nav sidebar-nav">
+    <li class="dropdown">
+        <h5 class="center">Histórico</h5>
+        <ul id="settings-dropdown" class="dropdown-menu">
+            <li>
+                <a href="#" tabindex="-1">
+                    Sair
+                </a>
+            </li>
+            <li>
+                <a href="#" tabindex="-1">
+                    Editar perfil
+                </a>
+            </li>
+            <li>
+                <a href="#" tabindex="-1">
+                    Excluir conta
+                </a>
+            </li>
+        </ul>
+    </li>
+    <p class="center">Nada a mostrar.</p>
+    <li class="divider"></li>
+    <li>
+        <a href="#">
+            <span><i class="tiny material-icons">trending_up</i></span> Minhas estatísticas
+        </a>
+    </li>
+    <li>
+        <a href="#">
+            <span><i class="tiny material-icons">live_help</i></span> Como criar um broker?
+        </a>
+    </li>
+    <li>
+        <a href="#">
+            <span><i class="tiny material-icons">developer_board</i></span> Configurando atuadores
+        </a>
+    </li>
+    <li>
+        <a href="#">
+            <span><i class="tiny material-icons">favorite</i></span> Contribuir com o projeto
+        </a>
+    </li>
+</ul>
+{% endblock menuoptions %}
+
+{% block rightbody %}
+    <h1>Meus ambientes:</h1>
+    <hr>
+    <div class="row">
+    {% for house in myhouses %}
+      
+        <div class="col s3">
+          <div class="card z-depth-2">
+            <div class="card-image">
+              <img src="{% static 'images/housedefault.jpg' %}">
+              <span class="card-title black-text">{{ house.name }}</span>
+              <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">open_in_new</i></a>
+            </div>
+            <div class="card-content">
+              <p>Conectado <i class="tiny material-icons">signal_wifi_4_bar</i></p>
+            </div>
+          </div>
+
+      
+      </div>
+        
+      
+    {% endfor %}
+    </div>
+    <h1>Ambientes que participo:</h1>
+    <hr>
+        
+    <div class="fixed-action-btn" style="bottom: 45px; right: 45px;">
+        <a class="btn-floating red btn-large" href="#modalAddHouse">
+            <i class="material-icons left">add</i>
+        </a>
+    </div>
+        <!-- Modal Structure -->
+  <div id="modalAddHouse" class="modal">
+    <div class="modal-content">
+      <h4>Adicionar casa ou ambiente</h4>
+      <p>Informe abaixo as informações relativas ao broker de mensagem.</p>
+      <p>Clique <a href="">aqui</a>, caso não saiba o que são Brokers.</p>
+      <div class="row">
+    
+      <div class="row">
+        <div class="input-field col s12">
+          <input placeholder="Ex.: Apartamento 201" id="name" type="text" class="validate" required>
+          <label for="name">Nome do ambiente</label>
+        </div>
+        <p>Dados do broker: </p>
+        <div class="input-field col s6">
+          <input placeholder="m13.cloudmqtt.com" id="server" type="text" class="validate" required>
+          <label for="server">Servidor</label>
+        </div>
+        <div class="input-field col s6">
+          <input placeholder="3606" id="port" type="text" class="validate" required>
+          <label for="server">Porta para websockets</label>
+        </div>
+        <div class="input-field col s6">
+          <input placeholder="Kgfoemsnq2432" id="user" type="text" class="validate" required>
+          <label for="user">Usuário do broker</label>
+        </div>
+        <div class="input-field col s6">
+          <input placeholder="*******" id="password" type="password" class="validate" required>
+          <label for="name">Senha do Broker</label>
+        </div>
+      </div>    
+     </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Cancelar</a>
+        <button onclick="addHouse();" class="waves-effect green btn-flat">Adicionar</button>
+    </div>
+  </div>
+
+{% endblock rightbody %}

@@ -9,7 +9,12 @@
 	    <link href="https://fonts.googleapis.com/css?family=Maven+Pro" rel="stylesheet">
 	    <link type="text/css" rel="stylesheet" href="{% static 'css/materialize.min.css' %}"  media="screen,projection"/>
 	    <link type="text/css" rel="stylesheet" href="{% static 'css/index.css' %}"  media="screen,projection"/>
+	    
+
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
 		<title>{% block titlepage %}CASINHA{% endblock titlepage%}</title>
+
 	</head>
 	<body>
 	{% if request.user.is_authenticated %}
@@ -64,9 +69,11 @@
 		</div>
 	</nav>
 	{% endif %}
+		
 	{% block body %}
 		
-	{% endblock body %}	
+	{% endblock body %}
+
 	<script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/index.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/materialize.min.js' %}"></script>
@@ -74,8 +81,10 @@
 		$(".button-collapse").sideNav();
 		$(".dropdown-button").dropdown({ hover: false });
 		$('.modal').modal();
+		$('select').css('display', 'inline');
 	</script>
+	{% block jscss %}
+		
+	{% endblock jscss %}
 	</body>
-
-
 </html>
