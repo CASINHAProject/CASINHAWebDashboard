@@ -118,41 +118,26 @@
         <!-- Modal Structure -->
   <div id="modalAddHouse" class="modal">
     <div class="modal-content">
-      <h4>Adicionar casa ou ambiente</h4>
-      <p>Informe abaixo as informações relativas ao broker de mensagem.</p>
-      <p>Clique <a href="">aqui</a>, caso não saiba o que são Brokers.</p>
+      <h4>Criar mensagem no ambiente</h4>
       <div class="row">
     
       <div class="row">
         <div class="input-field col s12">
-          <input placeholder="Ex.: Apartamento 201" id="name" type="text" class="validate" required>
-          <label for="name">Nome do ambiente</label>
+          <i class="material-icons prefix">mode_edit</i>
+          <textarea id="message" class="materialize-textarea"></textarea>
+          <label for="message">Mensagem</label>
         </div>
-        <p>Dados do broker: </p>
-        <div class="input-field col s6">
-          <input placeholder="m13.cloudmqtt.com" id="server" type="text" class="validate" required>
-          <label for="server">Servidor</label>
-        </div>
-        <div class="input-field col s6">
-          <input placeholder="3606" id="port" type="text" class="validate" required>
-          <label for="server">Porta para websockets</label>
-        </div>
-        <div class="input-field col s6">
-          <input placeholder="Kgfoemsnq2432" id="user" type="text" class="validate" required>
-          <label for="user">Usuário do broker</label>
-        </div>
-        <div class="input-field col s6">
-          <input placeholder="*******" id="password" type="password" class="validate" required>
-          <label for="name">Senha do Broker</label>
-        </div>
-      </div>    
      </div>
     </div>
     <div class="modal-footer">
         <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Cancelar</a>
-        <button onclick="addHouse();" class="waves-effect green btn-flat">Adicionar</button>
+        <button onclick="addMessage({{ house.pk }}, message.value);" class="waves-effect green btn-flat">Adicionar</button>
     </div>
   </div>
+
+<script type="text/javascript">
+  idHouse = {{ house.pk }}
+</script>
 
 {% endblock rightbody %}
 

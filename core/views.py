@@ -8,8 +8,11 @@ import json
 @login_required(login_url='/login')
 def index(request):
 	myhouses = House.objects.filter(creator=request.user)
+	myhousespart = House.objects.filter(participants=request.user).exclude(creator=request.user)
+
 	return render(request, 'index.html',{
-		'myhouses':myhouses
+		'myhouses':myhouses,
+		'myhousespart':myhousespart
 		})
 
 def login_page(request):

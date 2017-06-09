@@ -150,6 +150,46 @@ function addHouse(){
     
 }
 
+//var idHouse = 0;
+
+function addMessage(idHouse, message){
+    console.log("Evento para adicionar mensagem");
+    //$('.loadadd').removeClass("semfunc");
+    
+    $.ajax({
+        url : "/house/add/message/",
+        type : "POST",
+        data : { 
+            house : idHouse,
+            message : message
+             },
+
+
+
+        success : function(json) {
+            console.log("Resultado do processamento: "+json);
+            if (json == true) {
+                parent.window.document.location.href = '';
+            } else {
+                Materialize.toast('Complete todos os campos', 4000);
+                //$('.loadadd').addClass("semfunc");
+            }            
+        },
+
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+           Materialize.toast('Erro: '+xhr.status, 4000);
+           //$('.loadadd').addClass("semfunc");
+
+        }
+    }); 
+        
+
+    return false;
+    
+    
+}
+
 //Cookies globais padrões para utilização do AJAX
 
 function getCookie(name) {

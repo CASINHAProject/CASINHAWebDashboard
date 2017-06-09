@@ -12,6 +12,7 @@ ACTUATOR_TYPES = (
 
 class Actuator(models.Model):
 	name = models.CharField(max_length=100, verbose_name='Nome', null=False, blank=False)
+	description = models.CharField(max_length=100, verbose_name='Descrição', null=False, blank=False)
 	crated_by = models.DateTimeField(default=timezone.now)
 	actuator_type = models.IntegerField(choices=ACTUATOR_TYPES, null=False, default=1)
 	topic = models.CharField(max_length=100, verbose_name='Tópico', null=False, blank=False)

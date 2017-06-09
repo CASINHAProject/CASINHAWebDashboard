@@ -15,8 +15,8 @@ def add(request):
 				houseInstance.portws = request.POST.get('portws')
 				houseInstance.creator = request.user
 				houseInstance.save()
-				houseInstance.participants.add = request.user
-				houseInstance.save()
+				houseInstance.participants.add(request.user)
+				#houseInstance.save()
 				return HttpResponse(json.dumps(True), content_type="application/json")
 			return HttpResponse(json.dumps(False), content_type="application/json")
 		except Exception as e:
@@ -27,8 +27,27 @@ def add(request):
 
 def house_detail(request, pk):
 	house = get_object_or_404(House, pk=pk)
+	get_object_or_404(house.participants, pk=request.user.pk)
 	messages = Message.objects.filter(house=house)[::-1]
 	return render(request, 'house_detail.html', {
 		'house':house,
 		'messages':messages
 		})
+
+def addMessage(request):
+	if request.method == 'POST' and request.is_ajax():
+		try:
+			if request.POST.get('message') != "":
+				print(request.POST.get('message'))
+				print(request.POST.get('house'))
+				messageInstance = Message()
+				messageInstance.text = request.POST.get('message')
+				messageInstance.creator = request.user
+				messageInstance.house = get_object_or_404(House, pk=request.POST.get('house'))
+				messageInstance.save()
+				return HttpResponse(json.dumps(True), content_type="application/json")
+			return HttpResponse(json.dumps(False), content_type="application/json")
+		except Exception as e:
+			print(e)
+			return HttpResponse(json.dumps(False), content_type="application/json")
+	raise Http404
