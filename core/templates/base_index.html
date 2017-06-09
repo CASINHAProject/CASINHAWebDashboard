@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 
+
 {% block body %}
 
 <div class="row">
@@ -37,17 +38,12 @@
 <!-- Material sidebar -->
 
 <div class="col s12 m12 l9">
-    
-    <!-- Sidebar Constructor -->
-    <div class="constructor">
-        <div class="card-panel white medium">
-            <span class="black-text">
-                {% block rightbody %}
+<div class="constructor">
+{% block rightbody %}
 
-                {% endblock rightbody %}
-            </span>
-        </div>
-    </div>
+{% endblock rightbody %}
+</div>
+    
 
 </div>
 

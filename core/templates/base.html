@@ -9,10 +9,10 @@
 	    <link href="https://fonts.googleapis.com/css?family=Maven+Pro" rel="stylesheet">
 	    <link type="text/css" rel="stylesheet" href="{% static 'css/materialize.min.css' %}"  media="screen,projection"/>
 	    <link type="text/css" rel="stylesheet" href="{% static 'css/index.css' %}"  media="screen,projection"/>
+	    {% block css %}
+	    	
+	    {% endblock css %}
 	    
-
-
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
 		<title>{% block titlepage %}CASINHA{% endblock titlepage%}</title>
 
 	</head>

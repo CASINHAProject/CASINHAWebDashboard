@@ -1,15 +1,23 @@
 {% extends 'base_index.html' %}
 {% load staticfiles %}
-{% block titlepage %}CASINHA - Home{% endblock titlepage %}
+{% block titlepage %}{{ house.name }} - CASINHA{% endblock titlepage %}
 
 {% block css %}
-        
+<style type="text/css">
+  .sizingcut{
+    width: 300px;
+    height: 100px;
+    object-fit: cover;
+    object-position: center;
+  }
+</style>
 {% endblock css %}
 
 {% block menuoptions %}
+
 <ul class="nav sidebar-nav">
     <li class="dropdown">
-        <h5 class="center">Histórico</h5>
+        
         <ul id="settings-dropdown" class="dropdown-menu">
             <li>
                 <a href="#" tabindex="-1">
@@ -28,7 +36,23 @@
             </li>
         </ul>
     </li>
-    <p class="center">Nada a mostrar.</p>
+    <h5 class="center">Controle</h5>
+    <li>
+        <a href="#">
+            <span><i class="tiny material-icons">trending_up</i></span> Gerenciar participantes
+        </a>
+    </li>
+    <li>
+        <a href="#">
+            <span><i class="tiny material-icons">live_help</i></span> Gerenciar atuadores
+        </a>
+    </li>
+    <li class="divider"></li>
+    <p class="center">Detalhes de {{ house.name }}:</p>
+    <p class="center" >
+    <b><span><i class="tiny material-icons">supervisor_account</i></span> Participantes: </b>5 <br>
+    <b><span><i class="tiny material-icons">wb_incandescent</i></span> Atuadores/Sensores: </b> 3 <br>
+    <b><span><i class="tiny material-icons">network_wifi</i></span> Status: </b> conectado</p>
     <li class="divider"></li>
     <li>
         <a href="#">
@@ -52,42 +76,43 @@
     </li>
 </ul>
 {% endblock menuoptions %}
-    
-                
 
 {% block rightbody %}
-
-        <div class="card-panel white medium">
-            <span class="black-text">
-    <h4>Meus ambientes:</h4>
-    <hr>
     <div class="row">
-    {% for house in myhouses %}
-      
-        <div class="col s3">
-          <div class="card z-depth-2">
-            <div class="card-image">
-              <img src="{% static 'images/housedefault.jpg' %}">
-              <span class="card-title black-text">{{ house.name }}</span>
-              <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">open_in_new</i></a>
-            </div>
-            <div class="card-content">
-              <p>Conectado <i class="tiny material-icons">signal_wifi_4_bar</i></p>
+
+    <div class="card">
+    <div class="card-image waves-effect waves-block waves-light">
+      <img class="activator sizingcut" src="http://materializecss.com/images/office.jpg">
+    </div>
+    <div class="card-tabs">
+      <ul class="tabs tabs-fixed-width">
+        <li class="tab"><a class="active" href="#timeline">Linha do Tempo</a></li>
+        <li class="tab"><a href="#control">Painel de controle</a></li>
+      </ul>
+    </div>
+    <div class="card-content grey lighten-4">
+      <div id="timeline">
+        {% for obj in messages %}
+          <div class="s12">
+            <div class="card-panel">
+              <span class="black-text">
+                <p><b>{{ obj.creator }}</b> disse:</p>
+                <p>{{ obj.text }}</p>
+                <p>Há: {{ obj.crated_by|timesince }}</p>
+              </span>
             </div>
           </div>
-
-      
+        {% empty %}
+          
+        {% endfor %}
       </div>
-        
-      
-    {% endfor %}
+      <div id="control">Test 2</div>
     </div>
-    <h4>Ambientes que participo:</h4>
-    <hr>
-        
+  </div>
+  </div>  
     <div class="fixed-action-btn" style="bottom: 45px; right: 45px;">
         <a class="btn-floating red btn-large" href="#modalAddHouse">
-            <i class="material-icons left">add</i>
+            <i class="material-icons left">create</i>
         </a>
     </div>
         <!-- Modal Structure -->
@@ -128,7 +153,6 @@
         <button onclick="addHouse();" class="waves-effect green btn-flat">Adicionar</button>
     </div>
   </div>
-            </span>
-        </div>
-    
+
 {% endblock rightbody %}
+

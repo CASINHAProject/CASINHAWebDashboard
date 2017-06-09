@@ -1,5 +1,5 @@
-from django.shortcuts import render, Http404, HttpResponse
-from .models import House
+from django.shortcuts import render, Http404, HttpResponse, get_object_or_404
+from .models import House, Message
 import json
 
 def add(request):
@@ -23,3 +23,12 @@ def add(request):
 			print(e)
 			return HttpResponse(json.dumps(False), content_type="application/json")
 	raise Http404
+
+
+def house_detail(request, pk):
+	house = get_object_or_404(House, pk=pk)
+	messages = Message.objects.filter(house=house)[::-1]
+	return render(request, 'house_detail.html', {
+		'house':house,
+		'messages':messages
+		})
