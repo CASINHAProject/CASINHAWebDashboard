@@ -190,6 +190,125 @@ function addMessage(idHouse, message){
     
 }
 
+$('#f').submit(function() {
+    var form = $(this);
+    $.post(form.attr('action'), form.serialize(), function(retorno) {
+        if ($("#pesquisa").val() !== "") {
+        var searchValue = $("#pesquisa").val();
+          console.log($("#pesquisa").val());
+          //window.location.replace("/search="+ $("#pesquisa").val() +"");
+        }
+    });
+    return false;
+});
+
+function search_users(idHouse, message){
+    console.log("Evento para adicionar mensagem");
+    //$('.loadadd').removeClass("semfunc");
+    
+    $.ajax({
+        url : "/house/search_users/",
+        type : "POST",
+        data : { 
+            house : idHouse,
+            message : message
+             },
+        success : function(json) {
+            $('.resultData').html("");
+            $('.resultTxt').html("");
+            
+            if (json != false) {
+
+                console.log("Resultado do processamento: "+json);
+                  $('.resultTxt').html(
+                '<h6>Resultados para <i>'+ message +'</i>:<h6>');
+                for (var i = json.length - 1; i >= 0; i--) {
+                    $('.resultData').append("<li class='collection-item'><div><a href='#'><b>"+ json[i].username +"</b><span style='color: black;''> (" + json[i].email +")</span></a><a id='idsuserlink"+json[i].pk+"' href='#' onclick='add_user("+json[i].pk+", "+idHouse+")' class='secondary-content'><i class='material-icons idsuser"+json[i].pk+"'>person_add</i></a></div></li>");
+                    console.log(json[i].username);
+                }
+                //parent.window.document.location.href = '';
+            } else {
+                Materialize.toast('Nenhum resultado', 4000);
+                //$('.loadadd').addClass("semfunc");
+            }            
+        },
+
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+           Materialize.toast('Erro: '+xhr.status, 4000);
+           //$('.loadadd').addClass("semfunc");
+
+        }
+    }); 
+    return false;
+}
+
+function add_user(idUser, idHouse) {
+    $.ajax({
+        url : "/house/add_user/",
+        type : "POST",
+        data : { 
+            house : idHouse,
+            iduser : idUser
+             },
+        success : function(json) {
+            if (json != false) {
+                $('.idsuser'+idUser).html("clear");
+                $('#idsuserlink'+idUser).attr("onclick", "remove_user("+idUser+","+idHouse+")")
+                console.log("Resultado do processamento: "+json);
+                Materialize.toast('Membro adicionado!', 4000);
+                $('.warn').html("<p>*Algumas mudanças foram feitas. Recarregue a página para ver a lista atualizada.</p><a class='waves-effect waves-light btn' href=''><i class='material-icons right'>loop</i>Atualizar lista</a>");
+                 
+                //parent.window.document.location.href = '';
+            } else {
+                Materialize.toast('Nenhum resultado', 4000);
+                //$('.loadadd').addClass("semfunc");
+            }            
+        },
+
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+           Materialize.toast('Erro: '+xhr.status, 4000);
+           //$('.loadadd').addClass("semfunc");
+
+        }
+    }); 
+    return false;
+}
+
+function remove_user(idUser, idHouse) {
+    $.ajax({
+        url : "/house/remove_user/",
+        type : "POST",
+        data : { 
+            house : idHouse,
+            iduser : idUser
+             },
+        success : function(json) {
+            if (json != false) {
+                $('.idsuser'+idUser).html("person_add");
+                $('#idsuserlink'+idUser).attr("onclick", "add_user("+idUser+","+idHouse+")")
+                console.log("Resultado do processamento: "+json);
+                Materialize.toast('Membro removido!', 4000);
+                $('.warn').html("<p>*Algumas mudanças foram feitas. Recarregue a página para ver a lista atualizada.</p><a class='waves-effect waves-light btn' href=''><i class='material-icons right'>loop</i>Atualizar lista</a>");
+                 
+                //parent.window.document.location.href = '';
+            } else {
+                Materialize.toast('Nenhum resultado', 4000);
+                //$('.loadadd').addClass("semfunc");
+            }            
+        },
+
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+           Materialize.toast('Erro: '+xhr.status, 4000);
+           //$('.loadadd').addClass("semfunc");
+
+        }
+    }); 
+    return false;
+}
+
 //Cookies globais padrões para utilização do AJAX
 
 function getCookie(name) {

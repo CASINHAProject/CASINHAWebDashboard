@@ -1,6 +1,6 @@
 {% extends 'base_index.html' %}
 {% load staticfiles %}
-{% block titlepage %}{{ house.name }} - CASINHA{% endblock titlepage %}
+{% block titlepage %}Gerenciar participantes - {{ house.name }} - CASINHA{% endblock titlepage %}
 
 {% block css %}
 <style type="text/css">
@@ -37,13 +37,13 @@
         </ul>
     </li>
     <h5 class="center">Controle</h5>
-    <li class="active">
-        <a href="#">
+    <li>
+        <a href="{% url 'house:house_detail' house.pk %}">
             <span><i class="tiny material-icons">dashboard</i></span> Dashboard
         </a>
     </li>
-    <li>
-        <a href="{% url 'house:house_participants' house.pk %}">
+    <li class="active">
+        <a href="#">
             <span><i class="tiny material-icons">people</i></span> Gerenciar participantes
         </a>
     </li>
@@ -83,61 +83,59 @@
 {% endblock menuoptions %}
 
 {% block rightbody %}
+    <div class="card-panel white medium">
+            <span class="black-text">
+    <h4>Participantes de {{ house.name }}:</h4>
+    <hr>
     <div class="row">
-
-    <div class="card">
-    <div class="card-image waves-effect waves-block waves-light">
-      <img class="activator sizingcut" src="http://materializecss.com/images/office.jpg">
-    </div>
-    <div class="card-tabs">
-      <ul class="tabs tabs-fixed-width">
-        <li class="tab"><a class="active" href="#timeline">Linha do Tempo</a></li>
-        <li class="tab"><a href="#control">Painel de controle</a></li>
-      </ul>
-    </div>
-    <div class="card-content grey lighten-4">
-      <div id="timeline">
-        {% for obj in messages %}
-          <div class="s12">
-            <div class="card-panel">
-              <span class="black-text">
-                <p><b>{{ obj.creator }}</b> disse:</p>
-                <p>{{ obj.text }}</p>
-                <p>Há: {{ obj.crated_by|timesince }}</p>
-              </span>
-            </div>
-          </div>
-        {% empty %}
-          
+    <div class="col s12 m10 offset-m1 l12">
+    
+      <ul class="collection with-header" id="lista">
+        {% for participant in participants %}
+          <li class="collection-item"><div><a href="#"><b>{{ participant.username }}</b><span style="color: black;"> ({{ participant.email }}) - Ativo desde {{ participant.date_joined }}</span></a>
+          {% if request.user == house.creator and request.user.pk != participant.id %}
+          <a href="#" id="idsuserlink{{ participant.id }}" onclick="remove_user({{ participant.id }}, {{ house.pk }});" class="secondary-content"><i class="material-icons idsuser{{ participant.id }}">clear</i></a>
+          {% endif %}
+          </div></li>
         {% endfor %}
-      </div>
-      <div id="control">Test 2</div>
+      </ul>      
     </div>
-  </div>
-  </div>  
+    <div class="container center-align warn">
+
+    </div>
+
+    </div>
     <div class="fixed-action-btn" style="bottom: 45px; right: 45px;">
-        <a class="btn-floating red btn-large" href="#modalAddHouse">
-            <i class="material-icons left">create</i>
+        <a class="btn-floating red btn-large" href="#modalAddUser">
+            <i class="material-icons left">add</i>
         </a>
     </div>
         <!-- Modal Structure -->
-  <div id="modalAddHouse" class="modal">
+  <div id="modalAddUser" class="modal">
     <div class="modal-content">
-      <h4>Criar mensagem no ambiente</h4>
+      <h4>Adicionar participante ao ambiente</h4>
       <div class="row">
-    
+      <form method="post" id="f">
+      {% csrf_token %}
       <div class="row">
-        <div class="input-field col s12">
-          <i class="material-icons prefix">mode_edit</i>
-          <textarea id="message" class="materialize-textarea"></textarea>
-          <label for="message">Mensagem</label>
+        <div class="input-field col s9">
+          <input placeholder="Ex.: Leonard" id="pesquisa" type="text" class="validate">
+        </div>
+        <div class="col s2">
+          <button style="margin-top: 24px;" class="waves-effect grey btn-flat" onclick="search_users({{ house.pk }}, pesquisa.value);">Pesquisar</button>
         </div>
      </div>
+     </form>
     </div>
-    <div class="modal-footer">
-        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Cancelar</a>
-        <button onclick="addMessage({{ house.pk }}, message.value);" class="waves-effect green btn-flat">Adicionar</button>
+    <div class="row resultTxt">
     </div>
+    <div class="row">
+      <ul class="collection with-header resultData" id="lista">
+      </ul>
+    </div>   
+    <div class="container center-align">
+      <a class="modal-action modal-close waves-effect waves-light btn red" href="#!">Fechar</a>
+    </div> 
   </div>
 
 <script type="text/javascript">
