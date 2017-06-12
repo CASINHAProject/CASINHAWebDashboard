@@ -276,6 +276,75 @@ function add_user(idUser, idHouse) {
     return false;
 }
 
+function add_actuator(name, topic, desc, idactuator, idhouse) {
+    $.ajax({
+        url : "/house/add_actuator/",
+        type : "POST",
+        data : { 
+            name : name,
+            topic : topic,
+            desc : desc,
+            idactuator : idactuator,
+            idhouse : idhouse
+             },
+        success : function(json) {
+            if (json != false) {
+                console.log("Resultado do processamento: "+json);
+                Materialize.toast('Atuador/sensor salvo!', 4000);
+                $('.warn').html("<p>*Algumas mudanças foram feitas. Recarregue a página para ver a lista atualizada.</p><a class='waves-effect waves-light btn' href=''><i class='material-icons right'>loop</i>Atualizar lista</a>");
+                 
+                //parent.window.document.location.href = '';
+            } else {
+                Materialize.toast('Erro! Verifique se todos os campos foram completados.', 4000);
+                //$('.loadadd').addClass("semfunc");
+            }            
+        },
+
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+           Materialize.toast('Erro: '+xhr.status, 4000);
+           //$('.loadadd').addClass("semfunc");
+
+        }
+    }); 
+    return false;
+}
+
+function remove_actuator(idActuator, idHouse) {
+    console.log(idActuator);
+    console.log(idHouse);
+    $.ajax({
+        url : "/house/remove_actuator/",
+        type : "POST",
+        data : { 
+            actuator : idActuator,
+            house : idHouse
+             },
+        success : function(json) {
+            if (json != false) {
+                $('#idsactuator'+idActuator).css("text-decoration", "line-through");
+                $('#idsactuatorlink'+idActuator).html("");
+                console.log("Resultado do processamento: "+json);
+                Materialize.toast('Atuador/sensor removido!', 4000);
+                $('.warn').html("<p>*Algumas mudanças foram feitas. Recarregue a página para ver a lista atualizada.</p><a class='waves-effect waves-light btn' href=''><i class='material-icons right'>loop</i>Atualizar lista</a>");
+                 
+                //parent.window.document.location.href = '';
+            } else {
+                Materialize.toast('Nenhum resultado', 4000);
+                //$('.loadadd').addClass("semfunc");
+            }            
+        },
+
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+           Materialize.toast('Erro: '+xhr.status, 4000);
+           //$('.loadadd').addClass("semfunc");
+
+        }
+    }); 
+    return false;
+}
+
 function remove_user(idUser, idHouse) {
     $.ajax({
         url : "/house/remove_user/",
@@ -343,3 +412,4 @@ function getCookie(name) {
     });
 
 
+var id = 6;

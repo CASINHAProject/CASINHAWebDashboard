@@ -13,4 +13,8 @@ urlpatterns = [
 	url(r'^add_user/$', views.add_user, name='add_user'),
 	url(r'^remove_user/$', views.remove_user, name='remove_user'),
 
+	url(r'^detail/(?P<pk>[0-9]+)/actuators/$', views.house_actuators, name='house_actuators'),
+	url(r'^add_actuator/$', views.add_actuator, name='add_actuator'),
+	url(r'^remove_actuator/$', views.remove_actuator, name='remove_actuator'),
+
 ]

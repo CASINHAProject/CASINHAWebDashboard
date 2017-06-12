@@ -48,7 +48,7 @@
         </a>
     </li>
     <li>
-        <a href="#">
+        <a href="{% url 'house:house_actuators' house.pk %}">
             <span><i class="tiny material-icons">wb_incandescent</i></span> Gerenciar atuadores
         </a>
     </li>
@@ -111,7 +111,41 @@
           
         {% endfor %}
       </div>
-      <div id="control">Test 2</div>
+      <div id="control">
+          <ul class="collection">
+          {% for actuator in actuators %}
+            <li class="collection-item avatar">
+                <div class="container">
+                    <div class="col s6">
+                        <i class="material-icons circle">
+                          {% if actuator.actuator_type == 1 %}
+                            wb_incandescent
+                          {% elif actuator.actuator_type == 2 %}
+                            settings_input_antenna
+                          {% elif actuator.actuator_type == 3 %}
+                            ac_unit
+                          {% else %}
+                            toys
+                          {% endif %}
+                          </i>
+                          <span class="title"><b>{{ actuator.name }}</b></span>
+                          <p><b>Descrição:</b> {{ actuator.description }} <br>
+                             <b>Tópico:</b> {{ actuator.topic }}
+                          </p>
+                    </div>
+                    <div class="col s6">
+                    wgsnfdkgrnsfkdngdkf
+                    <div class="secondary-content"><i class="material-icons">grade</i></div>
+                    </div>
+                </div>
+              
+              
+            </li>
+          {% empty %}
+              
+          {% endfor %}
+          </ul>
+      </div>
     </div>
   </div>
   </div>  
@@ -134,9 +168,9 @@
         </div>
      </div>
     </div>
-    <div class="modal-footer">
-        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Cancelar</a>
-        <button onclick="addMessage({{ house.pk }}, message.value);" class="waves-effect green btn-flat">Adicionar</button>
+    <div class="container center-align">
+      <a class="modal-action modal-close waves-effect waves-light btn green" onclick="addMessage({{ house.pk }}, message.value);" href="#!">Adicionar</a>
+      <a class="modal-action modal-close waves-effect waves-light btn black" href="#!">Cancelar</a>
     </div>
   </div>
 
@@ -146,3 +180,25 @@
 
 {% endblock rightbody %}
 
+{% block js1 %}
+    <script type="text/javascript">
+    var adata = {};
+    adata["name"] = "{{ house.name }}";
+    adata["server"] = "{{ house.server }}";
+    adata["user"] = "{{ house.user }}";
+    adata["password"] = "{{ house.password }}";
+    adata["portws"] = "{{ house.portws }}";
+
+        var jdata = [];
+
+        {% for actuator in actuators %}
+            jdata.push({
+                key: "{{ actuator.topic }}",
+                value: "{{ actuator.id }}"
+            })
+        {% endfor %}
+    </script>
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="{% static 'js/mqtt_settings.js' %}"></script>
+{% endblock js1 %}

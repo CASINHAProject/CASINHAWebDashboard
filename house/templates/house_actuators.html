@@ -1,6 +1,6 @@
 {% extends 'base_index.html' %}
 {% load staticfiles %}
-{% block titlepage %}Gerenciar participantes - {{ house.name }} - CASINHA{% endblock titlepage %}
+{% block titlepage %}Gerenciar atuadores/sensores - {{ house.name }} - CASINHA{% endblock titlepage %}
 
 {% block css %}
 <style type="text/css">
@@ -42,13 +42,13 @@
             <span><i class="tiny material-icons">dashboard</i></span> Dashboard
         </a>
     </li>
-    <li class="active">
-        <a href="#">
+    <li>
+        <a href="{% url 'house:house_participants' house.pk %}">
             <span><i class="tiny material-icons">people</i></span> Gerenciar participantes
         </a>
     </li>
-    <li>
-        <a href="{% url 'house:house_actuators' house.pk %}">
+    <li class="active">
+        <a href="#">
             <span><i class="tiny material-icons">wb_incandescent</i></span> Gerenciar atuadores
         </a>
     </li>
@@ -85,20 +85,35 @@
 {% block rightbody %}
     <div class="card-panel white medium">
             <span class="black-text">
-    <h4>Participantes de {{ house.name }}:</h4>
+    <h4>Atuadores/Sensores de {{ house.name }}:</h4>
     <hr>
     <div class="row">
     <div class="col s12 m10 offset-m1 l12">
     
-      <ul class="collection with-header" id="lista">
-        {% for participant in participants %}
-          <li class="collection-item"><div><a href="#"><b>{{ participant.username }}</b><span style="color: black;"> ({{ participant.email }}) - Ativo desde {{ participant.date_joined }}</span></a>
-          {% if request.user == house.creator and request.user.pk != participant.id %}
-          <a href="#" id="idsuserlink{{ participant.id }}" onclick="remove_user({{ participant.id }}, {{ house.pk }});" class="secondary-content"><i class="material-icons idsuser{{ participant.id }}">clear</i></a>
+        <ul class="collection with-header" id="lista">
+        {% for actuator in actuators %}
+          <li class="collection-item" id="idsactuator{{ actuator.id }}" ><div><a href="#">
+          
+          <i class="tiny material-icons" style="color: black;">
+          {% if actuator.actuator_type == 1 %}
+            wb_incandescent
+          {% elif actuator.actuator_type == 2 %}
+            settings_input_antenna
+          {% elif actuator.actuator_type == 3 %}
+            ac_unit
+          {% else %}
+            toys
+          {% endif %}
+          </i>
+          
+           <b>{{ actuator.name }}</b><span style="color: black;"> ({{ actuator.topic }}) - Criado em {{ actuator.crated_by }}</span></a>
+          {% if request.user == house.creator %}
+          <a href="#" id="idsactuatorlink{{ actuator.id }}" onclick="remove_actuator({{ actuator.id }}, {{ house.pk }});" class="secondary-content"><i class="material-icons">clear</i></a>
           {% endif %}
           </div></li>
         {% endfor %}
-      </ul>      
+      </ul>  
+          
     </div>
     <div class="container center-align warn">
 
@@ -114,28 +129,40 @@
         <!-- Modal Structure -->
   <div id="modalAddUser" class="modal">
     <div class="modal-content">
-      <h4>Adicionar participante ao ambiente</h4>
+      <h4>Adicionar atuador/sensor ao ambiente</h4>
       <div class="row">
       <form method="post" id="f">
       {% csrf_token %}
       <div class="row">
-        <div class="input-field col s9">
-          <input placeholder="Ex.: Leonard" id="pesquisa" type="text" class="validate">
+        <div class="input-field col s6">
+          <input id="aname" type="text" class="validate">
+          <label class="active" for="aname">Nome</label>
         </div>
-        <div class="col s2">
-          <button style="margin-top: 24px;" class="waves-effect grey btn-flat" onclick="search_users({{ house.pk }}, pesquisa.value);">Pesquisar</button>
+        <div class="input-field col s6">
+          <input id="atopic" type="text" class="validate">
+          <label class="active" for="atopic">Tópico</label>
+        </div>
+        <div class="input-field col s12">
+          <input id="adesc" type="text" class="validate">
+          <label class="active" for="adesc">Descrição</label>
+        </div>
+        <div class="col s12">
+          <select id="idactuator">
+            <option value="" disabled selected>Selecione o atuador</option>
+            <option value="1">Lâmpada</option>
+            <option value="2">Sensor de distância</option>
+            <option value="3">Sensor de temperatura</option>
+            <option value="4">Ventilador</option>
+            <option value="5">Outro</option>
+          </select>
+          <label>Tipo de atuador</label>
         </div>
      </div>
      </form>
-    </div>
-    <div class="row resultTxt">
-    </div>
-    <div class="row">
-      <ul class="collection with-header resultData" id="lista">
-      </ul>
     </div>   
     <div class="container center-align">
-      <a class="modal-action modal-close waves-effect waves-light btn black" href="#!">Fechar</a>
+      <a class="modal-action modal-close waves-effect waves-light btn green" onclick="add_actuator(aname.value, atopic.value, adesc.value, idactuator.value, {{ house.pk }});" href="#!">Salvar</a>
+      <a class="modal-action modal-close waves-effect waves-light btn black" href="#!">Cancelar</a>
     </div> 
   </div>
   </div>

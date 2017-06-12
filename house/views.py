@@ -1,6 +1,8 @@
 from django.shortcuts import render, Http404, HttpResponse, get_object_or_404
 from .models import House, Message
 from core.models import User
+from actuator.models import Actuator
+
 import json
 
 def add(request):
@@ -28,11 +30,13 @@ def add(request):
 
 def house_detail(request, pk):
 	house = get_object_or_404(House, pk=pk)
+	actuators = Actuator.objects.filter(house=house)
 	get_object_or_404(house.participants, pk=request.user.pk)
 	messages = Message.objects.filter(house=house)[::-1]
 	return render(request, 'house_detail.html', {
 		'house':house,
-		'messages':messages
+		'messages':messages,
+		'actuators':actuators
 		})
 
 def house_participants(request, pk):
@@ -104,6 +108,54 @@ def remove_user(request):
 				house = get_object_or_404(House, pk=ambient)
 				if house.creator != request.user: raise Http404
 				house.participants.remove(user)
+				return HttpResponse(json.dumps(True), content_type="application/json")
+			return HttpResponse(json.dumps(False), content_type="application/json")
+		except Exception as e:
+			print(e)
+			return HttpResponse(json.dumps(False), content_type="application/json")
+	raise Http404
+
+def house_actuators(request, pk):
+	house = get_object_or_404(House, pk=pk)
+	get_object_or_404(house.participants, pk=request.user.pk)
+
+	actuators = Actuator.objects.filter(house=house)
+
+	return render(request, 'house_actuators.html', {
+		'house':house,
+		'actuators':actuators
+		})
+
+def add_actuator(request):
+	if request.method == 'POST' and request.is_ajax():
+		try:
+			if request.POST.get('name') != "" and request.POST.get('topic') != "" and request.POST.get('desc') != "" and request.POST.get('idactuator') != "" and request.POST.get('idhouse') != "":
+				ambient = request.POST.get('idhouse')
+				name = request.POST.get('name')
+				topic = request.POST.get('topic')
+				desc = request.POST.get('desc')
+				type_actuator = request.POST.get('idactuator')
+				house = get_object_or_404(House, pk=ambient)
+				if house.creator != request.user: raise Http404
+				new = Actuator(name=name, description=desc,actuator_type=type_actuator, topic=topic, house=house)
+				new.save()
+				
+				return HttpResponse(json.dumps(True), content_type="application/json")
+			return HttpResponse(json.dumps(False), content_type="application/json")
+		except Exception as e:
+			print(e)
+			return HttpResponse(json.dumps(False), content_type="application/json")
+	raise Http404
+
+def remove_actuator(request):
+	if request.method == 'POST' and request.is_ajax():
+		try:
+			if request.POST.get('actuator') != "" and request.POST.get('house') != "":
+				ambient = request.POST.get('house')
+				actuator = request.POST.get('actuator')
+				house = get_object_or_404(House, pk=ambient)
+				if house.creator != request.user: raise Http404
+				get_object_or_404(Actuator, pk=actuator).delete()
 				return HttpResponse(json.dumps(True), content_type="application/json")
 			return HttpResponse(json.dumps(False), content_type="application/json")
 		except Exception as e:
