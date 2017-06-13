@@ -12,6 +12,7 @@ class House(models.Model):
 	password = models.CharField(max_length=100, verbose_name='Senha', null=False, blank=False)
 	portws = models.CharField(max_length=100, verbose_name='Porta para websocket', null=False, blank=False)
 	participants = models.ManyToManyField(User, verbose_name='Participantes', blank=True)
+	image = models.FileField(upload_to='house/', null=True, blank=True)
 
 	def __str__(self):
 		return self.name

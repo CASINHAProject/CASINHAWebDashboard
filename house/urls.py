@@ -6,6 +6,7 @@ app_name = 'house'
 urlpatterns = [
 	#url(r'^$', views.index, name='index'),
 	url(r'^add/$', views.add, name='add'),
+	url(r'^delete_house/$', views.delete_house, name='delete_house'),
 	url(r'^add/message/$', views.addMessage, name='add'),
 	url(r'^detail/(?P<pk>[0-9]+)/$', views.house_detail, name='house_detail'),
 	url(r'^detail/(?P<pk>[0-9]+)/participants/$', views.house_participants, name='house_participants'),

@@ -16,6 +16,7 @@ def add(request):
 				houseInstance.user = request.POST.get('user')
 				houseInstance.password = request.POST.get('password')
 				houseInstance.portws = request.POST.get('portws')
+				houseInstance.image = request.FILES.get('image')
 				houseInstance.creator = request.user
 				houseInstance.save()
 				houseInstance.participants.add(request.user)
@@ -136,7 +137,18 @@ def remove_user(request):
 			return HttpResponse(json.dumps(False), content_type="application/json")
 	raise Http404
 
-
+def delete_house(request):
+	if request.method == 'POST' and request.is_ajax():
+		try:
+			if request.POST.get('house') != "":
+				ambient = request.POST.get('house')
+				house = get_object_or_404(House, pk=ambient).delete()
+				return HttpResponse(json.dumps(True), content_type="application/json")
+			return HttpResponse(json.dumps(False), content_type="application/json")
+		except Exception as e:
+			print(e)
+			return HttpResponse(json.dumps(False), content_type="application/json")
+	raise Http404
 
 def add_actuator(request):
 	if request.method == 'POST' and request.is_ajax():

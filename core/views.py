@@ -2,17 +2,19 @@ from django.shortcuts import render, HttpResponse, redirect, Http404, get_object
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from .models import User
-from house.models import House
+from house.models import House, Message
 import json
 
 @login_required(login_url='/login')
 def index(request):
 	myhouses = House.objects.filter(creator=request.user)
 	myhousespart = House.objects.filter(participants=request.user).exclude(creator=request.user)
+	mymessages = Message.objects.filter(creator=request.user)
 
 	return render(request, 'index.html',{
 		'myhouses':myhouses,
-		'myhousespart':myhousespart
+		'myhousespart':myhousespart,
+		'mymessages':mymessages[::-1][0:10]
 		})
 
 def login_page(request):

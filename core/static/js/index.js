@@ -106,6 +106,12 @@ function delete_account(){
        
 }
 
+var form = new FormData();
+    $('#imagem').change(function (event) {
+        form.append('image', event.target.files[0]); // para apenas 1 arquivo
+        //var nameee = event.target.files[0].content; // para capturar o nome do arquivo com sua extenção
+    });
+
 function addHouse(){
     console.log("apertado");
     var name = $("#name").val();
@@ -113,17 +119,20 @@ function addHouse(){
     var user = $("#user").val();
     var password = $("#password").val();
     var port = $("#port").val();
-    //$('.loadadd').removeClass("semfunc");
+    
+    form.append('name', name);
+    form.append('server', server);
+    form.append('user', user);
+    form.append('password', password);
+    form.append('portws', port);    
+
+    
     $.ajax({
         url : "/house/add/",
         type : "POST",
-        data : { 
-            name : name,
-            server : server,
-            user : user,
-            password : password,
-            portws : port
-             },
+        data : form,
+        processData: false,
+        contentType: false,
 
 
 
@@ -147,6 +156,8 @@ function addHouse(){
         
 
     return false;
+
+    
     
 }
 
@@ -445,6 +456,38 @@ function alterCheck(nameAc, numAc, topicAc) {
 
 }
 
+
+function deleteHouse(idHouse){
+
+    //$('.loadadd').removeClass("semfunc");
+    
+    $.ajax({
+        url : "/house/delete_house/",
+        type : "POST",
+        data : { 
+            house : idHouse
+             },
+
+
+
+        success : function(json) {
+            console.log("Resultado do processamento: "+json);
+            if (json == true) {
+                parent.window.document.location.href = '/';
+            } else {
+                Materialize.toast('Erro', 4000);
+                //$('.loadadd').addClass("semfunc");
+            }            
+        },
+
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+           Materialize.toast('Erro: '+xhr.status, 4000);
+           //$('.loadadd').addClass("semfunc");
+
+        }
+    });    
+}
 
 //Cookies globais padrões para utilização do AJAX
 
