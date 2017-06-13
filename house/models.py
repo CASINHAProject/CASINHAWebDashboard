@@ -21,6 +21,7 @@ class Message(models.Model):
 	creator = models.ForeignKey(User, verbose_name='Criador', null=False, blank=False, related_name='+')
 	house = models.ForeignKey(House, verbose_name='Ambiente', null=False, blank=False, related_name='+')
 	crated_by = models.DateTimeField(default=timezone.now)
+	is_message = models.BooleanField(default=False)
 	
 	def __str__(self):
 		return self.creator.username + ' disse ' + self.text + ' em ' + self.house.name

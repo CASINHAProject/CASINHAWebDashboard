@@ -55,9 +55,9 @@
     <li class="divider"></li>
     <p class="center">Detalhes de {{ house.name }}:</p>
     <p class="center" >
-    <b><span><i class="tiny material-icons">supervisor_account</i></span> Participantes: </b>5 <br>
-    <b><span><i class="tiny material-icons">wb_incandescent</i></span> Atuadores/Sensores: </b> 3 <br>
-    <b><span><i class="tiny material-icons">network_wifi</i></span> Status: </b> conectado</p>
+    <b><span><i class="tiny material-icons">supervisor_account</i></span> Participantes: </b>{{ participants.count }}<br>
+    <b><span><i class="tiny material-icons">wb_incandescent</i></span> Atuadores/Sensores: </b> {{ actuators.count }} <br>
+    <b><span><i class="tiny material-icons">network_wifi</i></span> Status: </b> <span id="connectInfo">conectando...</span></p>
     <li class="divider"></li>
     <li>
         <a href="#">
@@ -97,14 +97,22 @@
     </div>
     <div class="card-content grey lighten-4">
       <div id="timeline">
+        <div class="container center-align reloadtl">
+            
+        </div>
         {% for obj in messages %}
           <div class="s12">
             <div class="card-panel">
               <span class="black-text">
-                <p><b>{{ obj.creator }}</b> disse:</p>
-                <p>{{ obj.text }}</p>
-                <p>Há: {{ obj.crated_by|timesince }}</p>
-              </span>
+                {% if obj.is_message %}
+                    <p><b>{{ obj.creator }}</b> disse:</p>
+                        <p style="font-size: 15pt;"><i>"{{ obj.text }}"</i></p>    
+                {% else %}
+                    <p><b>{{ obj.creator }}</b> {{ obj.text|safe }}</p>
+                {% endif %}
+                    <small style="color: grey;">Há {{ obj.crated_by|timesince }}</small>
+                </span>
+                
             </div>
           </div>
         {% empty %}
@@ -124,8 +132,10 @@
                             settings_input_antenna
                           {% elif actuator.actuator_type == 3 %}
                             ac_unit
-                          {% else %}
+                          {% elif actuator.actuator_type == 4 %}
                             toys
+                          {% else %}
+                            devices_other
                           {% endif %}
                           </i>
                           <span class="title"><b>{{ actuator.name }}</b></span>
@@ -134,7 +144,23 @@
                           </p>
                     </div>
                     <div class="col s6">
-                    wgsnfdkgrnsfkdngdkf
+                        {% if actuator.actuator_type == 1 or actuator.actuator_type == 4 %}
+                            <!-- Switch -->
+                            <div class="switch">
+                                <label>
+                                  Off
+                                  <input id="element{{ actuator.id }}" onclick="alterCheck('{{ actuator.name }}', {{ actuator.id }}, '{{ actuator.topic }}');" type="checkbox">
+                                  <span class="lever"></span>
+                                  On
+                                </label>
+                            </div>
+                        {% elif actuator.actuator_type == 2 %}
+                            <p><b>Valor:</b><span id="element{{ actuator.id }}"> ...carregando valor</span> <b>Km</b></p>
+                        {% elif actuator.actuator_type == 3 %}
+                            <p><b>Valor:</b><span id="element{{ actuator.id }}">...carregando valor</span> ºC</p>
+                        {% else %}
+                            <p><b>Valor:</b><span id="element{{ actuator.id }}">...carregando valor</span></p>
+                        {% endif %}
                     <div class="secondary-content"><i class="material-icons">grade</i></div>
                     </div>
                 </div>
@@ -148,13 +174,18 @@
       </div>
     </div>
   </div>
-  </div>  
-    <div class="fixed-action-btn" style="bottom: 45px; right: 45px;">
-        <a class="btn-floating red btn-large" href="#modalAddHouse">
-            <i class="material-icons left">create</i>
+  </div>
+    <div class="fixed-action-btn horizontal" style="bottom: 45px; right: 45px;">
+        <a class="btn-floating btn-large red tooltipped" data-position="top" data-delay="50" data-tooltip="Publicar">
+            <i class="large material-icons">mode_edit</i>
         </a>
+        <ul>
+            <li><a class="btn-floating green tooltipped" data-position="top" data-delay="50" data-tooltip="Publicar mensagem na timeline" href="#modalAddHouse"><i class="material-icons">sms</i></a></li>
+            <li><a class="btn-floating green tooltipped" data-position="top" data-delay="50" data-tooltip="Publicar tópico" href="#modalAddTopic"><i class="material-icons">cloud_upload</i></a></li>
+        </ul>
     </div>
         <!-- Modal Structure -->
+
   <div id="modalAddHouse" class="modal">
     <div class="modal-content">
       <h4>Criar mensagem no ambiente</h4>
@@ -173,6 +204,31 @@
       <a class="modal-action modal-close waves-effect waves-light btn black" href="#!">Cancelar</a>
     </div>
   </div>
+  </div>
+
+  <div id="modalAddTopic" class="modal">
+    <div class="modal-content">
+      <h4>Criar tópico no broker</h4>
+      <div class="row">
+    
+      <div class="row">
+        <div class="input-field col s12">
+          <input placeholder="Ex.:corredor/luz" id="topic" type="text" class="validate">
+          <label for="topic">Tópico</label>
+        </div>
+        <div class="input-field col s12">
+          <input placeholder="Ex.:on" id="textt" type="text" class="validate">
+          <label for="topic">Conteúdo da mensagem</label>
+        </div>
+     </div>
+    </div>
+    <div class="container center-align">
+      <a class="waves-effect waves-light btn green" onclick="addTopic({{ house.pk }}, topic.value, textt.value);" href="#!">Publicar</a>
+      <a class="modal-action modal-close waves-effect waves-light btn black" href="#!">Cancelar</a>
+    </div>
+  </div>
+  </div>
+
 
 <script type="text/javascript">
   idHouse = {{ house.pk }}
@@ -181,6 +237,7 @@
 {% endblock rightbody %}
 
 {% block js1 %}
+
     <script type="text/javascript">
     var adata = {};
     adata["name"] = "{{ house.name }}";
@@ -188,13 +245,16 @@
     adata["user"] = "{{ house.user }}";
     adata["password"] = "{{ house.password }}";
     adata["portws"] = "{{ house.portws }}";
+    adata["key"] = "{{ request.user.id }}";
 
         var jdata = [];
 
         {% for actuator in actuators %}
             jdata.push({
-                key: "{{ actuator.topic }}",
-                value: "{{ actuator.id }}"
+                "name": "{{ actuator.name }}",
+                "topic": "{{ actuator.topic }}",
+                "value": "{{ actuator.id }}",
+                "type": "{{ actuator.actuator_type }}",
             })
         {% endfor %}
     </script>

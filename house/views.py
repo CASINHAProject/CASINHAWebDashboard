@@ -33,18 +33,35 @@ def house_detail(request, pk):
 	actuators = Actuator.objects.filter(house=house)
 	get_object_or_404(house.participants, pk=request.user.pk)
 	messages = Message.objects.filter(house=house)[::-1]
+	participants = house.participants.values()
+	actuators = Actuator.objects.filter(house=house)
 	return render(request, 'house_detail.html', {
 		'house':house,
 		'messages':messages,
-		'actuators':actuators
+		'actuators':actuators,
+		'participants':participants
 		})
 
 def house_participants(request, pk):
 	house = get_object_or_404(House, pk=pk)
 	get_object_or_404(house.participants, pk=request.user.pk)
 	participants = house.participants.values()
+	actuators = Actuator.objects.filter(house=house)
 	return render(request, 'house_participants.html', {
 		'house':house,
+		'participants':participants,
+		'actuators':actuators
+		})
+
+def house_actuators(request, pk):
+	house = get_object_or_404(House, pk=pk)
+	get_object_or_404(house.participants, pk=request.user.pk)
+	participants = house.participants.values()
+	actuators = Actuator.objects.filter(house=house)
+
+	return render(request, 'house_actuators.html', {
+		'house':house,
+		'actuators':actuators,
 		'participants':participants
 		})
 
@@ -54,10 +71,14 @@ def addMessage(request):
 			if request.POST.get('message') != "":
 				print(request.POST.get('message'))
 				print(request.POST.get('house'))
+				print(request.POST.get('is_m'))
 				messageInstance = Message()
 				messageInstance.text = request.POST.get('message')
 				messageInstance.creator = request.user
 				messageInstance.house = get_object_or_404(House, pk=request.POST.get('house'))
+				if request.POST.get('is_m') == '1':
+					print("é m")
+					messageInstance.is_message = True
 				messageInstance.save()
 				return HttpResponse(json.dumps(True), content_type="application/json")
 			return HttpResponse(json.dumps(False), content_type="application/json")
@@ -115,16 +136,7 @@ def remove_user(request):
 			return HttpResponse(json.dumps(False), content_type="application/json")
 	raise Http404
 
-def house_actuators(request, pk):
-	house = get_object_or_404(House, pk=pk)
-	get_object_or_404(house.participants, pk=request.user.pk)
 
-	actuators = Actuator.objects.filter(house=house)
-
-	return render(request, 'house_actuators.html', {
-		'house':house,
-		'actuators':actuators
-		})
 
 def add_actuator(request):
 	if request.method == 'POST' and request.is_ajax():

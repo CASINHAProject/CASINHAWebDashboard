@@ -7,7 +7,8 @@ ACTUATOR_TYPES = (
     (1, 'Lâmpada'),
     (2, 'Sonar'),
     (3, 'Temperatura'),
-    (4, 'Ventilador')
+    (4, 'Ventilador'),
+    (5, 'Outro'),
 )
 
 class Actuator(models.Model):

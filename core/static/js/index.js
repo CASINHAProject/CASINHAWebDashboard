@@ -154,6 +154,10 @@ function addHouse(){
 
 function addMessage(idHouse, message){
     console.log("Evento para adicionar mensagem");
+    m = new Paho.MQTT.Message(message);
+    m.destinationName = 'm';
+    client.send(m);
+    Materialize.toast('Mensagem publicada no ambiente', 24000);
     //$('.loadadd').removeClass("semfunc");
     
     $.ajax({
@@ -161,7 +165,8 @@ function addMessage(idHouse, message){
         type : "POST",
         data : { 
             house : idHouse,
-            message : message
+            message : message,
+            is_m : '1'
              },
 
 
@@ -169,7 +174,7 @@ function addMessage(idHouse, message){
         success : function(json) {
             console.log("Resultado do processamento: "+json);
             if (json == true) {
-                parent.window.document.location.href = '';
+                Materialize.toast('Mensagem salva no banco de dados', 24000);
             } else {
                 Materialize.toast('Complete todos os campos', 4000);
                 //$('.loadadd').addClass("semfunc");
@@ -182,12 +187,7 @@ function addMessage(idHouse, message){
            //$('.loadadd').addClass("semfunc");
 
         }
-    }); 
-        
-
-    return false;
-    
-    
+    });    
 }
 
 $('#f').submit(function() {
@@ -377,6 +377,74 @@ function remove_user(idUser, idHouse) {
     }); 
     return false;
 }
+
+function addTopic(idHouse, topic, message) {
+    m = new Paho.MQTT.Message(message);
+    m.destinationName = topic;
+    client.send(m);
+    Materialize.toast('Mensagem publicada no ambiente', 24000);
+    addAction(idHouse, 'publicou o tópico <b>'+ topic +'</b> com a mensagem <b> '+message+' </b>');
+}
+
+function addAction(idHouse, message){
+
+    //$('.loadadd').removeClass("semfunc");
+    
+    $.ajax({
+        url : "/house/add/message/",
+        type : "POST",
+        data : { 
+            house : idHouse,
+            message : message,
+            is_m : '0'
+             },
+
+
+
+        success : function(json) {
+            console.log("Resultado do processamento: "+json);
+            if (json == true) {
+                Materialize.toast('Mensagem salva no banco de dados', 24000);
+            } else {
+                Materialize.toast('Complete todos os campos', 4000);
+                //$('.loadadd').addClass("semfunc");
+            }            
+        },
+
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+           Materialize.toast('Erro: '+xhr.status, 4000);
+           //$('.loadadd').addClass("semfunc");
+
+        }
+    });    
+}
+
+function alterCheck(nameAc, numAc, topicAc) {
+    console.log(nameAc);
+    console.log($('#element'+numAc).prop('checked'));
+
+    bool = $('#element'+numAc).prop('checked');
+
+    if(bool == true){
+        m = new Paho.MQTT.Message('on');
+    }else{
+        m = new Paho.MQTT.Message('off');
+    }
+
+    console.log(m);
+    m.destinationName = topicAc;
+    client.send(m);
+    Materialize.toast('Mensagem publicada no ambiente. Aguarde a confirmação...', 24000);
+    $('#element'+numAc).prop('disabled', 'true');
+    if(bool == true){
+        addAction(idHouse, 'ligou o atuador <b>"'+ nameAc + '"</b>');
+    }else{
+        addAction(idHouse, 'desligou o atuador <b>"'+ nameAc + '"</b>');
+    }
+
+}
+
 
 //Cookies globais padrões para utilização do AJAX
 
