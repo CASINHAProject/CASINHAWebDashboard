@@ -73,7 +73,11 @@
 		<div class="col s3">
 		  <div class="card z-depth-2">
 			<div class="card-image">
-			  <img src="{% static 'images/housedefault.jpg' %}">
+			  	{% if house.image %}
+					<img src="{{ house.image.url }}">
+				{% else %}
+					<img src="{% static 'images/housedefault.jpg' %}">
+				{% endif %}	
 			  <span class="card-title black-text">{{ house.name }}</span>
 			  <a class="btn-floating halfway-fab waves-effect waves-light red" href="{% url 'house:house_detail' house.pk %}"><i class="material-icons">open_in_new</i></a>
 			</div>
@@ -97,7 +101,12 @@
 		<div class="col s3">
 		  <div class="card z-depth-2">
 			<div class="card-image">
-			  <img src="{% static 'images/housedefault.jpg' %}">
+				{% if house.image %}
+					<img src="{{ house.image.url }}" class="sizingprofilehouse">
+				{% else %}
+					<img src="{% static 'images/housedefault.jpg' %}">
+				{% endif %}		
+
 			  <span class="card-title black-text">{{ house.name }}</span>
 			  <a class="btn-floating halfway-fab waves-effect waves-light red" href="{% url 'house:house_detail' house.pk %}"><i class="material-icons">open_in_new</i></a>
 			</div>
