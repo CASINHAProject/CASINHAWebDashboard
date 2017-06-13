@@ -97,7 +97,12 @@
 
     <div class="card">
     <div class="card-image waves-effect waves-block waves-light">
-      <img class="activator sizingcut" src="{{ house.image.url }}">
+      {% if house.image %}
+        <img class="activator sizingcut" src="{{ house.image.url }}">
+      {% else %}
+        <img class="activator sizingcut" src="{% static 'images/housedefault.jpg' %}">
+      {% endif %}
+      
     </div>
     <div class="card-tabs">
       <ul class="tabs tabs-fixed-width">
