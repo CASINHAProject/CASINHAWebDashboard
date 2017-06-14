@@ -9,4 +9,5 @@ urlpatterns = [
 	url(r'^logout/$', views.make_logout),
 	url(r'^deletaconta/$', views.deletaconta),
 	url(r'^edit_profile/$', views.edit_profile),
+	url(r'^pdf/$', views.html_to_pdf_view)
 ]

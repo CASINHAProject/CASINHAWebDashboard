@@ -1,7 +1,9 @@
+numbrand = Math.floor(Math.random() * 500) + 1;
+
 Materialize.toast('Conectando ao broker do ambiente ' + adata["name"], 24000);
 
 // Create a client instance
-client = new Paho.MQTT.Client(adata.server, parseInt(adata.portws),adata.key); 
+client = new Paho.MQTT.Client(adata.server, parseInt(adata.portws),adata.key + numbrand); 
 //Example client = new Paho.MQTT.Client("m11.cloudmqtt.com", 32903, "web_" + parseInt(Math.random() * 100, 10));
 
 // set callback handlers

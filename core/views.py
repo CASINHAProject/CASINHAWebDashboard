@@ -4,6 +4,9 @@ from django.contrib.auth.decorators import login_required
 from .models import User, ImageData
 from house.models import House, Message
 import json
+from django.core.files.storage import FileSystemStorage
+from django.template.loader import render_to_string
+from weasyprint import HTML
 
 @login_required(login_url='/login')
 def index(request):
@@ -84,3 +87,26 @@ def edit_profile(request):
 			print(e)
 			return HttpResponse(json.dumps(False), content_type="application/json")
 	raise Http404
+
+def html_to_pdf_view(request):
+	myhouses = House.objects.filter(creator=request.user)
+	myhousespart = House.objects.filter(participants=request.user).exclude(creator=request.user)
+	mymessages = Message.objects.filter(creator=request.user)
+
+	html_string = render_to_string('template_to_pdf.html',{
+		'myhouses':myhouses,
+		'myhousespart':myhousespart,
+		'mymessages':mymessages[::-1],
+		'element':request.user.username
+		})
+
+	html = HTML(string=html_string)
+	html.write_pdf(target='/tmp/dados_'+request.user.username+'_CASINHA.pdf');
+
+	fs = FileSystemStorage('/tmp')
+	with fs.open('dados_'+request.user.username+'_CASINHA.pdf') as pdf:
+		response = HttpResponse(pdf, content_type='application/pdf')
+		response['Content-Disposition'] = 'attachment; filename="dados_'+request.user.username+'_CASINHA.pdf"'
+		return response
+
+	return response
