@@ -8,4 +8,5 @@ urlpatterns = [
 	url(r'^registra/$', views.register),
 	url(r'^logout/$', views.make_logout),
 	url(r'^deletaconta/$', views.deletaconta),
+	url(r'^edit_profile/$', views.edit_profile),
 ]

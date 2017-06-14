@@ -161,6 +161,62 @@ function addHouse(){
     
 }
 
+
+var formProfile = new FormData();
+    $('#profile').change(function (event) {
+        console.log("mudou a foto de perfil");
+        formProfile.append('profile', event.target.files[0]); // para apenas 1 arquivo
+        //var nameee = event.target.files[0].content; // para capturar o nome do arquivo com sua extenção
+    });
+    $('#cover').change(function (event) {
+        formProfile.append('cover', event.target.files[0]); // para apenas 1 arquivo
+        //var nameee = event.target.files[0].content; // para capturar o nome do arquivo com sua extenção
+    });
+
+function editProfile(){
+    console.log("apertado");
+    var username = $("#username").val();
+    var email= $("#email").val();
+
+    
+    formProfile.append('username', username);
+    formProfile.append('email', email); 
+
+    
+    $.ajax({
+        url : "/edit_profile/",
+        type : "POST",
+        data : formProfile,
+        processData: false,
+        contentType: false,
+
+
+
+        success : function(json) {
+            console.log("Resultado do processamento: "+json);
+            if (json == true) {
+                parent.window.document.location.href = '/';
+            } else {
+                Materialize.toast('Complete todos os campos', 4000);
+                //$('.loadadd').addClass("semfunc");
+            }            
+        },
+
+        error : function(xhr,errmsg,err) {
+            console.log(xhr.status + ": " + xhr.responseText);
+           Materialize.toast('Erro: '+xhr.status, 4000);
+           //$('.loadadd').addClass("semfunc");
+
+        }
+    }); 
+        
+
+    return false;
+
+    
+    
+}
+
 //var idHouse = 0;
 
 function addMessage(idHouse, message){

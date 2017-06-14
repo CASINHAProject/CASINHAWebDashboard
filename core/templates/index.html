@@ -7,27 +7,7 @@
 {% endblock css %}
 
 {% block menuoptions %}
-<ul class="nav sidebar-nav">
-	<li class="dropdown">
-		
-		<ul id="settings-dropdown" class="dropdown-menu">
-			<li>
-				<a href="#" tabindex="-1">
-					Sair
-				</a>
-			</li>
-			<li>
-				<a href="#" tabindex="-1">
-					Editar perfil
-				</a>
-			</li>
-			<li>
-				<a href="#" tabindex="-1">
-					Excluir conta
-				</a>
-			</li>
-		</ul>
-	</li>
+
 	<h5 class="center">Histórico</h5>
 	<ul class="collection">
 	{% for message in mymessages %}
@@ -123,7 +103,7 @@
 	{% endfor %}
 	</div>
 	<div class="fixed-action-btn" style="bottom: 45px; right: 45px;">
-		<a class="btn-floating red btn-large" href="#modalAddHouse">
+		<a class="btn-floating red btn-large tooltipped" data-position="top" data-delay="50" data-tooltip="Adicionar um novo ambiente" href="#modalAddHouse">
 			<i class="material-icons left">add</i>
 		</a>
 	</div>
@@ -159,7 +139,7 @@
 		</div>
 		<div class="col s12">
 			<div class="file-field input-field">
-		      <div class="btn">
+		      <div class="btn black">
 		        <span>Selecione uma imagem</span>
 		        <input type="file" id="imagem" name="imagem">
 		      </div>
@@ -170,10 +150,10 @@
 		</div>
 	  </div>    
 	 </div>
-	</div>
-	<div class="modal-footer">
-		<a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Cancelar</a>
-		<button onclick="addHouse();" class="waves-effect green btn-flat">Adicionar</button>
+	 <div class="container center-align">
+      <a class="modal-action modal-close waves-effect waves-light btn green" onclick="addHouse();" href="#!">Adicionar</a>
+      <a class="modal-action modal-close waves-effect waves-light btn black" href="#!">Fechar</a>
+     </div>
 	</div>
   </div>
 			</span>

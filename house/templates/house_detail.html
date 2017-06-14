@@ -1,5 +1,6 @@
 {% extends 'base_index.html' %}
 {% load staticfiles %}
+{% load aux_tags %}
 {% block titlepage %}{{ house.name }} - CASINHA{% endblock titlepage %}
 
 {% block css %}
@@ -116,9 +117,22 @@
             
         </div>
         {% for obj in messages %}
-          <div class="s12">
+
+          <div>
             <div class="card-panel">
-              <span class="black-text">
+              <div class="row">
+                
+              
+              <div class="col s1">
+                {% if obj.creator|profileimage %}
+                    <img src="{{ obj.creator|profileimage }}" class="circle responsive-img">
+                {% else %}
+                    <img src="{% static 'images/user1.jpg' %}" alt="" class="circle responsive-img">
+                {% endif %}
+                
+              </div>
+              <div class="col s11">
+                <span class="black-text">
                 {% if obj.is_message %}
                     <p><b>{{ obj.creator }}</b> disse:</p>
                         <p style="font-size: 15pt;"><i>"{{ obj.text }}"</i></p>    
@@ -127,6 +141,8 @@
                 {% endif %}
                     <small style="color: grey;">Há {{ obj.crated_by|timesince }}</small>
                 </span>
+              </div>
+              </div>
                 
             </div>
           </div>
@@ -140,7 +156,7 @@
             <li class="collection-item avatar">
                 <div class="container">
                     <div class="col s6">
-                        <i class="material-icons circle">
+                        <i class="material-icons circle" id="icon{{ actuator.id }}">
                           {% if actuator.actuator_type == 1 %}
                             wb_incandescent
                           {% elif actuator.actuator_type == 2 %}

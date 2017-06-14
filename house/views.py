@@ -46,7 +46,7 @@ def house_detail(request, pk):
 def house_participants(request, pk):
 	house = get_object_or_404(House, pk=pk)
 	get_object_or_404(house.participants, pk=request.user.pk)
-	participants = house.participants.values()
+	participants = house.participants.get_queryset()
 	actuators = Actuator.objects.filter(house=house)
 	return render(request, 'house_participants.html', {
 		'house':house,

@@ -9,6 +9,7 @@ def profileimage(value):
 		profile = ImageData.objects.get(user=value)
 		if profile:			
 			if profile.profile:
+				print(profile.profile.url)
 				return profile.profile.url
 			else:
 				return False

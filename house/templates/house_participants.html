@@ -1,5 +1,6 @@
 {% extends 'base_index.html' %}
 {% load staticfiles %}
+{% load aux_tags %}
 {% block titlepage %}Gerenciar participantes - {{ house.name }} - CASINHA{% endblock titlepage %}
 
 {% block css %}
@@ -90,13 +91,21 @@
     <div class="row">
     <div class="col s12 m10 offset-m1 l12">
     
-      <ul class="collection with-header" id="lista">
+      <ul class="collection" id="lista">
         {% for participant in participants %}
-          <li class="collection-item"><div><a href="#"><b>{{ participant.username }}</b><span style="color: black;"> ({{ participant.email }}) - Ativo desde {{ participant.date_joined }}</span></a>
+          <li class="collection-item avatar">
+          {% if participant|profileimage %}
+              <img src="{{ participant|profileimage }}" class="circle responsive-img">
+          {% else %}
+              <img src="{% static 'images/user1.jpg' %}" alt="" class="circle responsive-img">
+          {% endif %}          
+          <span class="title"><b>{{ participant.username }}</b></span>
+          <p style="color: black;"></p>
+          Ativo desde {{ participant.date_joined }}
           {% if request.user == house.creator and request.user.pk != participant.id %}
           <a href="#" id="idsuserlink{{ participant.id }}" onclick="remove_user({{ participant.id }}, {{ house.pk }});" class="secondary-content"><i class="material-icons idsuser{{ participant.id }}">clear</i></a>
           {% endif %}
-          </div></li>
+          </li>
         {% endfor %}
       </ul>      
     </div>

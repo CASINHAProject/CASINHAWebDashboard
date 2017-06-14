@@ -63,10 +63,12 @@ function onMessageArrived(message) {
 			if (jdata[i].type == "1" || jdata[i].type == "4") {
 				if (message.payloadString == "on") {
 					$("#element"+jdata[i].value).prop('checked', true);
+					$("#icon"+jdata[i].value).addClass('yellow');
 					Materialize.toast('Mensagem no ambiente ' + jdata[i].name + ' foi ligado(a) neste momento', 24000);
 					//addAction(idHouse, 'ligou o atuador <b>'+ jdata[i].name);
 				} else {
 					$("#element"+jdata[i].value).prop('checked', null);
+					$("#icon"+jdata[i].value).removeClass('yellow')
 					Materialize.toast('Mensagem no ambiente ' + jdata[i].name + ' foi desligado(a) neste momento', 24000);
 					//addAction(idHouse, 'desligou o atuador <b>'+ jdata[i].name);
 				}

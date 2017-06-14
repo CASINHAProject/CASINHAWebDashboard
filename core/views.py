@@ -1,7 +1,7 @@
 from django.shortcuts import render, HttpResponse, redirect, Http404, get_object_or_404
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
-from .models import User
+from .models import User, ImageData
 from house.models import House, Message
 import json
 
@@ -42,6 +42,9 @@ def register(request):
 		userInstance.save()
 		print("user: "+ userInstance.username)
 		print("senha: "+ passw)
+		new_image_data = ImageData()
+		new_image_data.user = userInstance
+		new_image_data.save()
 		user = authenticate(username=userInstance.username, password=passw)
 		if user is not None:
 			if user.is_active:
@@ -56,6 +59,28 @@ def make_logout(request):
 
 def deletaconta(request):
 	if request.is_ajax():
+		get_object_or_404(ImageData, user=request.user).delete()
 		request.user.delete()
 		return HttpResponse(json.dumps(True), content_type="application/json")
+	raise Http404
+
+def edit_profile(request):
+	if request.method == 'POST' and request.is_ajax():
+		try:
+			if request.POST.get('username') != "" and request.POST.get('email') != "":
+				#print(request.POST.get('name') + request.POST.get('server') + request.POST.get('user') + request.POST.get('password') + request.POST.get('portws'))
+
+				request.user.username = request.POST.get('username')
+				request.user.email = request.POST.get('email')
+				request.user.save()
+				dataimage = get_object_or_404(ImageData, user=request.user)
+				dataimage.profile = request.FILES.get('profile')
+				dataimage.cover = request.FILES.get('cover')
+				dataimage.save()
+				#houseInstance.save()
+				return HttpResponse(json.dumps(True), content_type="application/json")
+			return HttpResponse(json.dumps(False), content_type="application/json")
+		except Exception as e:
+			print(e)
+			return HttpResponse(json.dumps(False), content_type="application/json")
 	raise Http404
