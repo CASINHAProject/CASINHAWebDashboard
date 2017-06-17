@@ -55,6 +55,7 @@
     <li class="divider"></li>
     <p class="center">Detalhes de {{ house.name }}:</p>
     <p class="center" >
+    <b><span><i class="tiny material-icons">vpn_key</i></span> Chave de acesso: </b>{{ house.hash_key }}<br>
     <b><span><i class="tiny material-icons">supervisor_account</i></span> Participantes: </b>{{ participants.count }}<br>
     <b><span><i class="tiny material-icons">wb_incandescent</i></span> Atuadores/Sensores: </b> {{ actuators.count }} <br>
     <b><span><i class="tiny material-icons">network_wifi</i></span> Status: </b> <span id="connectInfo">conectando...</span></p>
