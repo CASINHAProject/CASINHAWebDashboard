@@ -16,7 +16,15 @@ from django.contrib.auth import login, logout, authenticate
 class ActuatorsListView(APIView):
 	'''
 	Envie username, senha e chave de acesso e retornará
-	Todos os atuadores e sensores de um ambiente.
+	Todos os atuadores e sensores de um ambiente
+
+	Exemplo:
+
+	{
+     "user": "...",
+     "pass": "...",
+     "token":"..."
+	}
 	'''
 
 	def post(self, request, format=None):
