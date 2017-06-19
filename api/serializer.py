@@ -16,4 +16,4 @@ class HouseSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = House
 		depth = 1
-		fields = ['id', 'name', 'creator', 'server', 'user', 'password', 'portws', 'actuators', 'image', 'hash_key']
+		fields = ['id', 'name', 'creator', 'server', 'user', 'password', 'portws', 'actuators', 'image', 'hash_key','latitude','longitude']

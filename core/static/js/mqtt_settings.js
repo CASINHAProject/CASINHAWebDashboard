@@ -32,13 +32,13 @@ function onConnect() {
 	}
 
 	client.subscribe("m");
-	message1 = new Paho.MQTT.Message("state");
-	message1.destinationName = "luz1";
-	message2 = new Paho.MQTT.Message("state");
-	message2.destinationName = "luz2";
+	//message1 = new Paho.MQTT.Message("state");
+	//message1.destinationName = "luz1";
+	//message2 = new Paho.MQTT.Message("state");
+	//message2.destinationName = "luz2";
 
-	client.send(message1);
-	client.send(message2); 
+	//client.send(message1);
+	//client.send(message2); 
 }
 
 function doFail(e){
@@ -63,15 +63,15 @@ function onMessageArrived(message) {
 			//console.log("sim");
 			$("#element"+jdata[i].value).prop('disabled', null);
 			if (jdata[i].type == "1" || jdata[i].type == "4") {
-				if (message.payloadString == "on") {
+				if (message.payloadString == "1") {
 					$("#element"+jdata[i].value).prop('checked', true);
 					$("#icon"+jdata[i].value).addClass('yellow');
-					Materialize.toast('Mensagem no ambiente ' + jdata[i].name + ' foi ligado(a) neste momento', 24000);
+					Materialize.toast('Mensagem no ambiente ' + jdata[i].name + ' foi ligado(a) neste momento', 700);
 					//addAction(idHouse, 'ligou o atuador <b>'+ jdata[i].name);
 				} else {
 					$("#element"+jdata[i].value).prop('checked', null);
 					$("#icon"+jdata[i].value).removeClass('yellow')
-					Materialize.toast('Mensagem no ambiente ' + jdata[i].name + ' foi desligado(a) neste momento', 24000);
+					Materialize.toast('Mensagem no ambiente ' + jdata[i].name + ' foi desligado(a) neste momento', 700);
 					//addAction(idHouse, 'desligou o atuador <b>'+ jdata[i].name);
 				}
 				
@@ -85,7 +85,7 @@ function onMessageArrived(message) {
 	}else if(message.destinationName == "r/luz2"){
 		$("#luz2").html(message.payloadString);
 	}else{
-		Materialize.toast('Mensagem no ambiente ' + adata.name + ': '+message.payloadString, 24000);
+		Materialize.toast('Mensagem no ambiente ' + adata.name + ': '+message.payloadString, 700);
 	}
 	//console.log("onMessageArrived:"+message.payloadString);
 console.log("onMessageArrived:"+message.destinationName);

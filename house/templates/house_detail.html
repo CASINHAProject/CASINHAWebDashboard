@@ -63,6 +63,17 @@
 
     {% endif %}
 
+    
+    {% if house.latitude %}
+      <li class="divider"></li>
+        <p class="center">Local:</p>
+      <div class="cont">
+        <div id="map_container"></div>
+        <div id="map" style="min-height: 319.567px;"></div>
+    </div>
+    {% endif %}
+    
+
     <li class="divider"></li>
     <p class="center">Detalhes de {{ house.name }}:</p>
     <p class="center" >
@@ -280,6 +291,8 @@
     adata["user"] = "{{ house.user }}";
     adata["password"] = "{{ house.password }}";
     adata["portws"] = "{{ house.portws }}";
+    adata["lat"] = "{{ house.latitude }}";
+    adata["lon"] = "{{ house.longitude }}";
     adata["key"] = "{{ request.user.id }}";
 
         var jdata = [];
@@ -295,5 +308,6 @@
     </script>
 <script src="https://d3js.org/d3.v3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js" type="text/javascript"></script>
+<script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyBz1c3R0OYYYpQIY_ZTliDneinH4B49B-g"></script>
 <script type="text/javascript" src="{% static 'js/mqtt_settings.js' %}"></script>
 {% endblock js1 %}

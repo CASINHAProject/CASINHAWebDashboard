@@ -38,4 +38,29 @@ class ActuatorsListView(APIView):
 		get_object_or_404(house.participants, pk=user.pk)
 
 		serializer = HouseSerializer(house)
-		return Response(serializer.data, status=status.HTTP_201_CREATED)
+		return Response(serializer.data, status=status.HTTP_200_OK)
+
+class UpdateLocalizationView(APIView):
+	'''
+	Envie key da casa, latitude e longitude e altere a localização
+	do ambiente.
+
+	Exemplo:
+
+	{
+     "key": "...",
+     "latitude": "...",
+     "longitude":"..."
+	}
+	'''
+
+	def post(self, request, format=None):
+		hash_key = request.data['key']
+		house = get_object_or_404(House, hash_key=hash_key)
+		if request.data['key'] == "" or request.data['latitude'] == "" or request.data['longitude'] == "":
+			return Response({"message":"404 Not Found"}, status=status.HTTP_404_NOT_FOUND)
+		house.latitude = request.data['latitude']
+		house.longitude = request.data['longitude']
+		house.save()
+
+		return Response(house.hash_key, status=status.HTTP_200_OK)

@@ -17,6 +17,8 @@ class House(models.Model):
 	participants = models.ManyToManyField(User, verbose_name='Participantes', blank=True)
 	image = models.FileField(upload_to='house/', null=True, blank=True)
 	hash_key = models.CharField(max_length=100, default=binascii.hexlify(os.urandom(4)).decode(), verbose_name='Chave de acesso', null=False, blank=False)
+	latitude = models.CharField(max_length=100, verbose_name='Latitude', null=True, blank=True)
+	longitude = models.CharField(max_length=100, verbose_name='Longitude', null=True, blank=True)
 
 	def save(self):
 		self.hash_key = binascii.hexlify(os.urandom(4)).decode()

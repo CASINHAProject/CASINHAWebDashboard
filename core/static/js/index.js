@@ -224,7 +224,7 @@ function addMessage(idHouse, message){
     m = new Paho.MQTT.Message(message);
     m.destinationName = 'm';
     client.send(m);
-    Materialize.toast('Mensagem publicada no ambiente', 24000);
+    Materialize.toast('Mensagem publicada no ambiente', 340);
     //$('.loadadd').removeClass("semfunc");
     
     $.ajax({
@@ -241,7 +241,7 @@ function addMessage(idHouse, message){
         success : function(json) {
             console.log("Resultado do processamento: "+json);
             if (json == true) {
-                Materialize.toast('Mensagem salva no banco de dados', 24000);
+                Materialize.toast('Mensagem salva no banco de dados', 540);
             } else {
                 Materialize.toast('Complete todos os campos', 4000);
                 //$('.loadadd').addClass("semfunc");
@@ -449,7 +449,7 @@ function addTopic(idHouse, topic, message) {
     m = new Paho.MQTT.Message(message);
     m.destinationName = topic;
     client.send(m);
-    Materialize.toast('Mensagem publicada no ambiente', 24000);
+    Materialize.toast('Mensagem publicada no ambiente', 540);
     addAction(idHouse, 'publicou o tópico <b>'+ topic +'</b> com a mensagem <b> '+message+' </b>');
 }
 
@@ -471,7 +471,7 @@ function addAction(idHouse, message){
         success : function(json) {
             console.log("Resultado do processamento: "+json);
             if (json == true) {
-                Materialize.toast('Mensagem salva no banco de dados', 24000);
+                //Materialize.toast('Mensagem salva no banco de dados', 24000);
             } else {
                 Materialize.toast('Complete todos os campos', 4000);
                 //$('.loadadd').addClass("semfunc");
@@ -502,7 +502,7 @@ function alterCheck(nameAc, numAc, topicAc) {
     console.log(m);
     m.destinationName = topicAc;
     client.send(m);
-    Materialize.toast('Mensagem publicada no ambiente. Aguarde a confirmação...', 24000);
+    Materialize.toast('Mensagem publicada no ambiente. Aguarde a confirmação...', 540);
     $('#element'+numAc).prop('disabled', 'true');
     if(bool == true){
         addAction(idHouse, 'ligou o atuador <b>"'+ nameAc + '"</b>');
@@ -580,3 +580,59 @@ function getCookie(name) {
 
 
 var id = 6;
+
+
+
+$( document ).ready( function() {
+
+
+  
+//Google Maps JS
+//Set Map
+function initialize() {
+        var myLatlng = new google.maps.LatLng(parseFloat(adata["lat"]),parseFloat(adata["lon"]));
+        var imagePath = 'http://m.schuepfen.ch/icons/helveticons/black/60/Pin-location.png'
+        var mapOptions = {
+            zoom: 17,
+            center: myLatlng,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+
+    var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+    //Callout Content
+    var contentString = 'Some address here..';
+    //Set window width + content
+    var infowindow = new google.maps.InfoWindow({
+        content: contentString,
+        maxWidth: 500,
+    });
+
+    //Add Marker
+    var marker = new google.maps.Marker({
+        position: myLatlng,
+        map: map,
+        icon: imagePath,
+        title: 'image title'
+    });
+
+    google.maps.event.addListener(marker, 'click', function() {
+        infowindow.open(map,marker);
+    });
+
+    //Resize Function
+    google.maps.event.addDomListener(window, "resize", function() {
+        var center = map.getCenter();
+        google.maps.event.trigger(map, "resize");
+        map.setCenter(center);
+    });
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+});
+jQuery(document).ready(function($) { 
+    $(".scroll").click(function(event){        
+        event.preventDefault();
+        $('html,body').animate({scrollTop:$(this.hash).offset().top}, 600);
+   });
+});
